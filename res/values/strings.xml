@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GiacchettoDropBoxAPITest</string>
+    <string name="action_settings">Settings</string>
+	<string name="link_button">Link to DropBox Account</string>
+	<string name="default_message">Link your DropBox account to start.</string>
+	<string name="failed_to_link">There was an error linking your dropbox account. Please try again.</string>
+	<string name="upload_photo">Take and Upload a Photo</string>
+</resources>
