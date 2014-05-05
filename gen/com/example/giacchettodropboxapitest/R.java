@@ -1091,12 +1091,13 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050040;
+        public static final int action_settings=0x7f050042;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
         public static final int btnLink=0x7f05003e;
         public static final int btnPhoto=0x7f05003f;
+        public static final int btnView=0x7f050040;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int container=0x7f05003c;
@@ -1116,6 +1117,7 @@ containing a value of this type.
         public static final int lblWelcomeMsg=0x7f05003d;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
+        public static final int lstPhotos=0x7f050041;
         public static final int middle=0x7f050012;
         public static final int never=0x7f050009;
         public static final int none=0x7f050010;
@@ -1249,6 +1251,7 @@ containing a value of this type.
         public static final int default_message=0x7f0a0010;
         public static final int failed_to_link=0x7f0a0011;
         public static final int link_button=0x7f0a000f;
+        public static final int refresh_photos=0x7f0a0013;
         public static final int upload_photo=0x7f0a0012;
     }
     public static final class style {

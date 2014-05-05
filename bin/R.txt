@@ -246,12 +246,13 @@ int id action_context_bar 0x7f05001d
 int id action_menu_divider 0x7f050016
 int id action_menu_presenter 0x7f050017
 int id action_mode_close_button 0x7f050024
-int id action_settings 0x7f050040
+int id action_settings 0x7f050042
 int id activity_chooser_view_content 0x7f050025
 int id always 0x7f05000b
 int id beginning 0x7f050011
 int id btnLink 0x7f05003e
 int id btnPhoto 0x7f05003f
+int id btnView 0x7f050040
 int id checkbox 0x7f05002d
 int id collapseActionView 0x7f05000d
 int id container 0x7f05003c
@@ -271,6 +272,7 @@ int id image 0x7f050027
 int id lblWelcomeMsg 0x7f05003d
 int id listMode 0x7f050001
 int id list_item 0x7f050029
+int id lstPhotos 0x7f050041
 int id middle 0x7f050012
 int id never 0x7f050009
 int id none 0x7f050010
@@ -347,6 +349,7 @@ int string app_name 0x7f0a000d
 int string default_message 0x7f0a0010
 int string failed_to_link 0x7f0a0011
 int string link_button 0x7f0a000f
+int string refresh_photos 0x7f0a0013
 int string upload_photo 0x7f0a0012
 int style AppBaseTheme 0x7f0b008b
 int style AppTheme 0x7f0b008c

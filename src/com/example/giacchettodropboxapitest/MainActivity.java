@@ -2,7 +2,11 @@ package com.example.giacchettodropboxapitest;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountInfo;
@@ -10,6 +14,7 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxException.Unauthorized;
 import com.dropbox.sync.android.DbxFile;
+import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 
@@ -26,7 +31,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -41,11 +49,14 @@ public class MainActivity extends ActionBarActivity {
     
     private Button btnLink;
     private Button btnPhoto;
+    private Button btnView;
     private TextView lblWelcomeMsg;
     private DbxAccountManager dbxAcctManager;
     private DbxAccount dbxAcct;
     private DbxAccountInfo dbxAcctInfo;
     private DbxFileSystem dbxFileSystem;
+    private ListView lstPhotos;
+    
     private static String imageFilePath;
 	
     @Override
@@ -54,6 +65,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         btnLink = (Button) findViewById(R.id.btnLink);
         btnPhoto = (Button) findViewById(R.id.btnPhoto);
+        btnView = (Button) findViewById(R.id.btnView);
+        lstPhotos = (ListView) findViewById(R.id.lstPhotos);
         lblWelcomeMsg = (TextView) findViewById(R.id.lblWelcomeMsg);
         
         /*if (savedInstanceState == null) {
@@ -74,6 +87,12 @@ public class MainActivity extends ActionBarActivity {
                 onClickTakePhoto();
             }
         });
+        btnView.setOnClickListener(new OnClickListener () {
+        	@Override
+            public void onClick(View v) {
+                onClickRefreshPhotos();
+            }
+        });
         
         //Initialize account manager
         dbxAcctManager = DbxAccountManager.getInstance(getApplicationContext(), appKey, appSecret);
@@ -82,6 +101,35 @@ public class MainActivity extends ActionBarActivity {
         if (dbxAcctManager.hasLinkedAccount()) {
         	onLinkToDropBox();
     	}
+        
+        initializePhotoList();
+    }
+    
+    private void initializePhotoList() {
+    	ArrayList<DbxFileInfo> fileList;
+    	try {
+			fileList = (ArrayList<DbxFileInfo>) dbxFileSystem.listFolder(DbxPath.ROOT);
+		} catch (DbxException e) {
+			//error in getting access to the file list
+			return;
+		}
+    	//Populate an array of DbxPaths with the filenames
+    	ArrayList<DbxPath> filePathList = new ArrayList<DbxPath>();
+    	for (DbxFileInfo fileInfo : fileList) {
+    		filePathList.add(fileInfo.path);
+    	}
+    	//create the adapter that the list will use
+    	final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, filePathList);
+    	lstPhotos.setAdapter(adapter);
+    	//set the click listener to view the photo on click
+    	lstPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    		@Override
+    	    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+    			DbxPath dbxPath = (DbxPath) parent.getItemAtPosition(position);
+    			viewPhoto(dbxPath);
+    		}
+		});
+    
     }
     
     private void onClickLinkToDropbox() {
@@ -107,6 +155,50 @@ public class MainActivity extends ActionBarActivity {
     		//no linked account, display default message
     		lblWelcomeMsg.setText(R.string.default_message);
     	}
+    }
+    
+    private void onClickRefreshPhotos() {
+    	//display a list of all the files in the directory
+    }
+    
+    private void refreshPhotoList() {
+    	//check if we are linked
+    	if (dbxAcct.isLinked()) {
+        	//list all of the files in our sub-view of the dropbox
+    		
+    	}
+    	
+    }
+    
+    private void viewPhoto(DbxPath dbxPath) {
+    	//read the file and open the intent to view the image
+    	DbxFile imgFile;
+    	
+    	try {
+			imgFile = dbxFileSystem.open(dbxPath);
+		
+	    	//read and copy from dropbox to local file system
+	    	FileInputStream inputStream = imgFile.getReadStream();
+	    	File tmpFile = new File(Environment.getExternalStorageDirectory(), "img_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+	    	FileOutputStream outputStream = new FileOutputStream(tmpFile);
+	    	int read = 0;
+	    	byte[] bytes = new byte[1024];
+	    	while ((read = inputStream.read(bytes)) != -1) {
+	    		outputStream.write(bytes, 0, read);
+	    	}
+	    	inputStream.close();
+	    	outputStream.close();
+	    	imgFile.close();
+	    	//now tmpFile contains the image. Launch the photo viewer
+	    	Intent intent = new Intent();
+	    	intent.setAction(Intent.ACTION_VIEW);
+	    	intent.setDataAndType(Uri.fromFile(tmpFile), "image/*");
+	    	startActivity(intent);
+		} catch (DbxException e) {
+			return;
+		} catch (IOException e) {
+			return;
+		}
     }
     
 	@Override
@@ -138,10 +230,10 @@ public class MainActivity extends ActionBarActivity {
     private void uploadImage(String imageFilePath) {
     	//use the file system and upload the new image
     	if (!imageFilePath.equals("")) {
-	    	String fileName = imageFilePath;
-	    	fileName = fileName.substring(fileName.lastIndexOf("/"));
+	    	String dbxPathString = imageFilePath;
+	    	dbxPathString = dbxPathString.substring(dbxPathString.lastIndexOf("/"));
 	    	
-	    	DbxPath dbxPath = new DbxPath(fileName);
+	    	DbxPath dbxPath = new DbxPath(dbxPathString);
 	    	try {
 				DbxFile dbxFile = dbxFileSystem.create(dbxPath);
 				File imgFile = new File(imageFilePath);

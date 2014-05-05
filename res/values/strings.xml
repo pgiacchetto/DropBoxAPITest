@@ -7,4 +7,5 @@
 	<string name="default_message">Link your DropBox account to start.</string>
 	<string name="failed_to_link">There was an error linking your dropbox account. Please try again.</string>
 	<string name="upload_photo">Take and Upload a Photo</string>
+	<string name="refresh_photos">Refresh Photo List</string>
 </resources>

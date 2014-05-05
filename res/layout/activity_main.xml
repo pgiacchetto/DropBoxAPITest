@@ -29,6 +29,18 @@
             android:layout_height="wrap_content"
             android:text="@string/upload_photo" />
 
+        <Button
+            android:id="@+id/btnView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh_photos" />
+
+        <ListView
+            android:id="@+id/lstPhotos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+
     </LinearLayout>
 
 </FrameLayout>
