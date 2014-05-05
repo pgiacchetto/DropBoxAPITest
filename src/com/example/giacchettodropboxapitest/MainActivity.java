@@ -56,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
     private DbxAccountInfo dbxAcctInfo;
     private DbxFileSystem dbxFileSystem;
     private ListView lstPhotos;
+    private ArrayList<DbxPath> filePathList;
     
     private static String imageFilePath;
 	
@@ -114,12 +115,12 @@ public class MainActivity extends ActionBarActivity {
 			return;
 		}
     	//Populate an array of DbxPaths with the filenames
-    	ArrayList<DbxPath> filePathList = new ArrayList<DbxPath>();
+    	filePathList = new ArrayList<DbxPath>();
     	for (DbxFileInfo fileInfo : fileList) {
     		filePathList.add(fileInfo.path);
     	}
     	//create the adapter that the list will use
-    	final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, filePathList);
+    	final ArrayAdapter<DbxPath> adapter = new ArrayAdapter<DbxPath>(this, android.R.layout.simple_list_item_1, filePathList);
     	lstPhotos.setAdapter(adapter);
     	//set the click listener to view the photo on click
     	lstPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -159,13 +160,15 @@ public class MainActivity extends ActionBarActivity {
     
     private void onClickRefreshPhotos() {
     	//display a list of all the files in the directory
+    	refreshPhotoList();
     }
     
     private void refreshPhotoList() {
     	//check if we are linked
     	if (dbxAcct.isLinked()) {
-        	//list all of the files in our sub-view of the dropbox
-    		
+        	//refresh the list
+    		ArrayAdapter<DbxPath> adapter = (ArrayAdapter<DbxPath>) lstPhotos.getAdapter();
+    		adapter.notifyDataSetChanged();
     	}
     	
     }
